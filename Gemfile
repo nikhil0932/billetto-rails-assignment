@@ -43,6 +43,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # RSpec for Rails testing
+  gem "rspec-rails", "~> 7.0"
 end
 
 group :development do
@@ -54,5 +57,9 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # Additional RSpec helpers
+  gem "factory_bot_rails", "~> 6.2"
+  gem "shoulda-matchers", "~> 6.0"
 end
 gem "rails_event_store", "~> 3.2.0"
