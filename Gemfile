@@ -46,6 +46,9 @@ group :development, :test do
 
   # RSpec for Rails testing
   gem "rspec-rails", "~> 7.0"
+  
+  # Dotenv for loading environment variables from .env.local
+  gem "dotenv-rails", "~> 3.1.0"
 end
 
 group :development do
@@ -61,5 +64,22 @@ group :test do
   # Additional RSpec helpers
   gem "factory_bot_rails", "~> 6.2"
   gem "shoulda-matchers", "~> 6.0"
+  
+  # Faker for generating test data
+  gem "faker", "~> 3.0"
+  
+  # Webmock for HTTP mocking
+  gem "webmock", "~> 3.18"
+  
+  # JWT for mocking Clerk tokens in tests
+  gem "jwt", "~> 2.7"
+  
+  # Controller testing helpers
+  gem "rails-controller-testing", "~> 1.0"
 end
+
+# Clerk.com authentication (using latest stable version)
+gem "clerk-sdk-ruby", "~> 3.3.0"
+
+# Rails Event Store
 gem "rails_event_store", "~> 3.2.0"
