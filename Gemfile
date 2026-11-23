@@ -48,7 +48,7 @@ group :development, :test do
   gem "rspec-rails", "~> 7.0"
   
   # Dotenv for loading environment variables from .env.local
-  gem "dotenv-rails", "~> 3.1.0"
+  gem "dotenv-rails", "~> 3.2.0"
 end
 
 group :development do
