@@ -79,7 +79,7 @@ group :test do
 end
 
 # Clerk.com authentication (using latest stable version)
-gem "clerk-sdk-ruby", "~> 3.3.0"
+gem "clerk-sdk-ruby", "~> 5.0.2"
 
 # Rails Event Store
 gem "rails_event_store", "~> 3.2.0"
