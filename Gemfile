@@ -63,7 +63,7 @@ group :test do
 
   # Additional RSpec helpers
   gem "factory_bot_rails", "~> 6.2"
-  gem "shoulda-matchers", "~> 6.0"
+  gem "shoulda-matchers", "~> 8.0"
   
   # Faker for generating test data
   gem "faker", "~> 3.0"
