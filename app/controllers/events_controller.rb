@@ -47,16 +47,4 @@ class EventsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to events_url, alert: 'Event not found'
   end
-
-  def user_signed_in?
-    request.env['current_user'].present?
-  end
-
-  def current_user
-    request.env['current_user']
-  end
-
-  def authenticate_user!
-    redirect_to '/sign-in' unless user_signed_in?
-  end
 end
