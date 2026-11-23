@@ -1,0 +1,280 @@
+<div class="container">
+  <div class="header">
+    <%= link_to '← Back', events_path, class: 'back' %>
+    <h1><%= @event.title %></h1>
+    <p><strong>Date:</strong> <%= @event.start_date.strftime("%A, %B %d, %Y at %I:%M %p") %></p>
+  </div>
+
+  <div class="content">
+    <div class="main">
+      <section>
+        <h2>About This Event</h2>
+        <%= simple_format(@event.description) %>
+      </section>
+
+      <section>
+        <h2>Event Information</h2>
+        <div class="info">
+          <div class="item">
+            <span class="label">Event ID:</span>
+            <code><%= @event.billetto_id %></code>
+          </div>
+          
+          <div class="item">
+            <span class="label">Status:</span>
+            <span class="badge badge-<%= @event.start_date.future? ? 'upcoming' : 'past' %>">
+              <%= @event.start_date.future? ? 'Upcoming' : 'Past' %>
+            </span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="sidebar">
+      <section>
+        <h2>Your Vote</h2>
+        <%= render 'shared/voting_ui', event: @event %>
+      </section>
+
+      <section>
+        <h2>Stats</h2>
+        <div class="stats">
+          <div class="row">
+            <span>👍 Upvotes</span>
+            <span class="count"><%= @event.upvote_count %></span>
+          </div>
+          
+          <div class="row">
+            <span>👎 Downvotes</span>
+            <span class="count"><%= @event.downvote_count %></span>
+          </div>
+          
+          <div class="row total">
+            <span>Total Voters</span>
+            <span class="count"><%= @total_voters %></span>
+          </div>
+
+          <div class="row score">
+            <span>Vote Score</span>
+            <span class="count <%= @event.vote_score >= 0 ? 'pos' : 'neg' %>">
+              <%= @event.vote_score > 0 ? '+' : '' %><%= @event.vote_score %>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Community Voting</h2>
+        <div class="info-box">
+          <p>This event's popularity is determined by community votes.</p>
+          <% if user_signed_in? %>
+            <% if @user_vote %>
+              <p class="highlight">
+                You voted <strong><%= @user_vote.vote_type.capitalize %></strong>. Click above to change.
+              </p>
+            <% else %>
+              <p class="highlight">
+                Cast your vote to let others know what you think!
+              </p>
+            <% end %>
+          <% else %>
+            <p class="highlight">
+              <%= link_to 'Sign in', '/sign-in' %> to vote on this event.
+            </p>
+          <% end %>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .header {
+    margin-bottom: 32px;
+  }
+
+  .back {
+    display: inline-block;
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .back:hover {
+    text-decoration: underline;
+  }
+
+  .header h1 {
+    margin: 0 0 8px 0;
+    font-size: 36px;
+  }
+
+  .header p {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+  }
+
+  .main section {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .main section:last-child {
+    border-bottom: none;
+  }
+
+  .main h2 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+  }
+
+  .main p {
+    color: #333;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .info {
+    display: grid;
+    gap: 16px;
+  }
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .label {
+    font-weight: 500;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .item code {
+    background: #e8e8e8;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .badge-upcoming {
+    background-color: #c6e3b5;
+    color: #25802d;
+  }
+
+  .badge-past {
+    background-color: #fce5e6;
+    color: #d33b27;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .sidebar section {
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .sidebar h2 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+  }
+
+  .stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: white;
+    border-radius: 4px;
+  }
+
+  .row.total,
+  .row.score {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 8px;
+    padding-top: 12px;
+  }
+
+  .count {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a73e8;
+  }
+
+  .count.pos {
+    color: #34a853;
+  }
+
+  .count.neg {
+    color: #ea4335;
+  }
+
+  .info-box p {
+    margin: 8px 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .info-box .highlight {
+    background: #e3f2fd;
+    padding: 8px;
+    border-left: 3px solid #1a73e8;
+    margin: 12px 0;
+  }
+
+  .info-box a {
+    color: #1a73e8;
+    text-decoration: none;
+  }
+
+  .info-box a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .content {
+      grid-template-columns: 1fr;
+    }
+
+    .header h1 {
+      font-size: 24px;
+    }
+  }
+</style>

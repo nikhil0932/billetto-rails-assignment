@@ -1,0 +1,138 @@
+<div class="voting">
+  <% if user_signed_in? %>
+    <div class="buttons">
+      <% user_vote = current_user.votes.find_by(event: event) %>
+      
+      <form class="form" data-event-id="<%= event.id %>" data-vote-type="upvote">
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <%= hidden_field_tag :vote_type, 'upvote' %>
+        <button type="submit" class="btn-vote <%= user_vote&.upvote? ? 'active' : '' %>">
+          👍 Upvote (<span class="count"><%= event.upvote_count %></span>)
+        </button>
+      </form>
+      
+      <form class="form" data-event-id="<%= event.id %>" data-vote-type="downvote">
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <%= hidden_field_tag :vote_type, 'downvote' %>
+        <button type="submit" class="btn-vote <%= user_vote&.downvote? ? 'active' : '' %>">
+          👎 Downvote (<span class="count"><%= event.downvote_count %></span>)
+        </button>
+      </form>
+    </div>
+
+    <% if user_vote %>
+      <div class="status">
+        <p>You voted: <strong><%= user_vote.vote_type.capitalize %></strong></p>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="prompt">
+      <p><%= link_to "Sign in", '/sign-in' %> to vote</p>
+    </div>
+  <% end %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const voteForms = document.querySelectorAll('.form');
+  
+  voteForms.forEach(form => {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const eventId = this.dataset.eventId;
+      const voteType = this.dataset.voteType;
+      const token = this.querySelector('input[name="authenticity_token"]').value;
+      
+      try {
+        const response = await fetch(`/events/${eventId}/vote`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-Token': token
+          },
+          body: `vote_type=${voteType}&authenticity_token=${token}`
+        });
+        
+        if (response.ok) {
+          setTimeout(() => location.reload(), 300);
+        }
+      } catch (error) {
+        console.error('Voting error:', error);
+        location.reload();
+      }
+    });
+  });
+});
+</script>
+
+<style>
+  .voting {
+    padding: 16px;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-vote {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-vote:hover {
+    border-color: #1a73e8;
+    color: #1a73e8;
+  }
+
+  .btn-vote.active {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+  }
+
+  .status {
+    margin-top: 12px;
+    padding: 12px;
+    background: #e3f2fd;
+    border-left: 4px solid #1a73e8;
+    border-radius: 4px;
+  }
+
+  .status p {
+    margin: 0;
+    color: #1a73e8;
+    font-size: 14px;
+  }
+
+  .prompt {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .prompt p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .prompt a {
+    color: #1a73e8;
+    text-decoration: none;
+  }
+
+  .prompt a:hover {
+    text-decoration: underline;
+  }
+</style>

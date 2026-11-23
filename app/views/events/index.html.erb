@@ -1,0 +1,114 @@
+<div class="container">
+  <div class="header">
+    <h1>Billetto Events</h1>
+    <p>Discover and vote on upcoming events</p>
+  </div>
+
+  <% if user_signed_in? %>
+    <div class="welcome">
+      <p>Welcome, <strong><%= current_user.full_name %></strong>!</p>
+      <p>You can vote on events to show your interest</p>
+    </div>
+  <% else %>
+    <div class="prompt">
+      <p>
+        <%= link_to "Sign in", '/sign-in' %> to vote on events
+      </p>
+    </div>
+  <% end %>
+
+  <% if @events.any? %>
+    <div class="grid">
+      <% @events.each do |event| %>
+        <%= render 'shared/event_card', event: event %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty">
+      <h3>No events found</h3>
+      <p>Check back soon!</p>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 36px;
+  }
+
+  .header p {
+    margin: 8px 0 0 0;
+    color: #666;
+    font-size: 16px;
+  }
+
+  .welcome {
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+
+  .welcome p {
+    margin: 0;
+    color: #2e7d32;
+    font-size: 14px;
+  }
+
+  .prompt {
+    background: #fff3e0;
+    border-left: 4px solid #ff9800;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .prompt p {
+    margin: 0;
+  }
+
+  .prompt a {
+    color: #ff9800;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .prompt a:hover {
+    text-decoration: underline;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .empty h3 {
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .empty p {
+    color: #999;
+    font-size: 14px;
+  }
+</style>
