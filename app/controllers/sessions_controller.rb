@@ -1,17 +1,25 @@
 class SessionsController < ApplicationController
-  # GET /sign-in
   def new
     render :new
   end
 
-  # GET /sign-up
   def signup
     render :signup
   end
 
-  # GET /sign-out
+  def create
+    user = User.find_by(clerk_id: params[:clerk_id])
+    if user
+      session[:user_id] = user.id
+      redirect_to root_path, notice: 'Signed in successfully'
+    else
+      redirect_to '/sign-in', alert: 'User not found'
+    end
+  end
+
   def destroy
-    redirect_to root_path, notice: 'You have been signed out.'
+    session[:user_id] = nil
+    redirect_to root_path, notice: 'Signed out'
   end
 end
 
