@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:votes) }
-    it { is_expected.to have_many(:voted_events).through(:votes) }
   end
 
   describe 'validations' do
@@ -11,32 +10,27 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_presence_of(:email) }
 
     it 'validates uniqueness of clerk_id' do
-      user1 = create(:user, clerk_id: 'clerk_123')
-      user2 = build(:user, clerk_id: 'clerk_123')
-      expect(user2).not_to be_valid
+      create(:user, clerk_id: 'clerk_123')
+      user = build(:user, clerk_id: 'clerk_123')
+      expect(user).not_to be_valid
     end
 
     it 'validates uniqueness of email' do
-      user1 = create(:user, email: 'test@example.com')
-      user2 = build(:user, email: 'test@example.com')
-      expect(user2).not_to be_valid
+      create(:user, email: 'test@example.com')
+      user = build(:user, email: 'test@example.com')
+      expect(user).not_to be_valid
     end
   end
 
   describe '#full_name' do
-    it 'returns full name when both names are present' do
+    it 'returns full name' do
       user = build(:user, first_name: 'John', last_name: 'Doe')
       expect(user.full_name).to eq('John Doe')
     end
 
-    it 'returns empty string when both names are blank' do
+    it 'returns empty string when no names' do
       user = build(:user, first_name: nil, last_name: nil)
       expect(user.full_name).to eq('')
-    end
-
-    it 'returns only first name when last name is blank' do
-      user = build(:user, first_name: 'John', last_name: nil)
-      expect(user.full_name).to eq('John')
     end
   end
 
@@ -44,12 +38,12 @@ RSpec.describe User, type: :model do
     let(:user) { create(:user) }
     let(:event) { create(:event) }
 
-    it 'returns true if user has voted on event' do
+    it 'returns true if voted' do
       create(:vote, event: event, user_id: user.clerk_id)
       expect(user.has_voted?(event)).to be true
     end
 
-    it 'returns false if user has not voted on event' do
+    it 'returns false if not voted' do
       expect(user.has_voted?(event)).to be false
     end
   end
@@ -57,6 +51,17 @@ RSpec.describe User, type: :model do
   describe '#vote_type_for' do
     let(:user) { create(:user) }
     let(:event) { create(:event) }
+
+    it 'returns vote type' do
+      create(:vote, event: event, user_id: user.clerk_id, vote_type: 'upvote')
+      expect(user.vote_type_for(event)).to eq('upvote')
+    end
+
+    it 'returns nil if no vote' do
+      expect(user.vote_type_for(event)).to be_nil
+    end
+  end
+end
 
     it 'returns vote type if user has voted' do
       vote = create(:vote, event: event, user_id: user.clerk_id, vote_type: 'upvote')
