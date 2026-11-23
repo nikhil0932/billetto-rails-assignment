@@ -45,7 +45,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # RSpec for Rails testing
-  gem "rspec-rails", "~> 7.0"
+  gem "rspec-rails", "~> 8.1"
   
   # Dotenv for loading environment variables from .env.local
   gem "dotenv-rails", "~> 3.1.0"
