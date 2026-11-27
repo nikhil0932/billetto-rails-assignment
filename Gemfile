@@ -69,7 +69,7 @@ group :test do
   gem "faker", "~> 3.0"
   
   # Webmock for HTTP mocking
-  gem "webmock", "~> 3.18"
+  gem "webmock", "~> 3.40"
   
   # JWT for mocking Clerk tokens in tests
   gem "jwt", "~> 2.7"
